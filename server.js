@@ -2,9 +2,19 @@ const express = require('express');
 const fetch = require('node-fetch');
 const app = express();
 
+// Root route (to avoid "Cannot GET /")
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>Crown Nexus Proxy</h1>
+    <p>Proxy is running. Use it like this:</p>
+    <code>https://your-proxy.onrender.com/proxy?url=https://example.com</code>
+  `);
+});
+
+// The actual proxy endpoint
 app.get('/proxy', async (req, res) => {
   const url = req.query.url;
-  if (!url) return res.status(400).send('Missing url');
+  if (!url) return res.status(400).send('Missing url parameter');
 
   try {
     const response = await fetch(url, {
